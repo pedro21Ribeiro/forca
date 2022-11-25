@@ -1,44 +1,44 @@
-#jogo da forca
 import random
-palavras = ["macaco", "rato", "elefante", "hipopotamo"]
-maxi = len(palavras) -1
+from words import words
+import string
+
+def ValidWords():
+    word = random.choice(words).upper()
+    while '-' in word or ' ' in word:
+        word = random.choice(words).upper()
+
+    return word
 
 def hangman():
-    randNum = random.randrange(0,maxi)
-    pEscolhida = palavras[randNum]
-    numLetras = len(pEscolhida)
-    letrasCorretas = list(pEscolhida)
-    tentativas = 0
-    acertos = 0
-    letrasTentadas = []
-    palavraMontada = []
-    j = 0
-    while j <= numLetras:
-        palavraMontada.append("-")
-    while tentativias <=6 and acertos <numLetras:
-        letra = input("Digite uma letra:  ")
-        charNum = len(list(letra))
-        if charNum > 1:
-            print("Isso foi mais de uma letra favor digitar somente uma letra \n")
-        elif letra in letrasTentadas:
-            print("Essa letra já foi usada\n")
-        elif letra.isalpha():
-            for i in letrasCorretas:
-                if not i.isaplha:
-                    if letra == i:
-                        palavraMontada.append(letra)
-                        print("parabens essa letra estava correta \n")
-                        acertos = acertos + 1
-                    else:
-                        palavraMontada.append("-")
-                        print("que pena letra errada\n")
-                        tentativas = tentativas + 1
-                        print(tentativas)
-            letrasTentadas.append(letra)
+    word = ValidWords()
+    wordLetters = set(word)
+    alphabet = set(string.ascii_uppercase)
+    usedletters = set()
+    lives = 6
+
+    while len(wordLetters) > 0 and lives > 0:
+        print('estas letras já foram ultilizadas: ', ' '.join(usedletters) + '\n')
+        # i is a letter
+        print('ainda restam', lives,'tentativas')
+        lista = [i if i in usedletters else '-' for i in word]
+        print('palavra: ', ' '.join(lista))
+        
+        userGuess = input('Escolha uma letra:   ')
+        userGuess = userGuess.upper()
+        if userGuess in alphabet - usedletters:
+            usedletters.add(userGuess)
+            if userGuess in wordLetters:
+                wordLetters.remove(userGuess)
+            else:
+                lives = lives -1
+                print('letra errada')
+
+        elif userGuess in usedletters:
+            print('essa letra já foi usada\n')
         else:
-            print("O input não é uma letra\n")
-    if tentativas == 6:
-        print("infelizmente voce perdeu, a palavra era" + pEscolhida)
+            print('charactere invalido, favor usar somente letras \n')
+    if lives == 0:
+        print('voce perdeu')
     else:
-        print("Parabéns voce acertou a palavra, "+ pEscolhida)
+        print('parabéns voce acerteou a palavra', word)
 hangman()
